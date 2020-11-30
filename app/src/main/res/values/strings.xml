@@ -1,0 +1,8 @@
+<resources>
+	<string name="app_name">YaTranslator</string>
+	<string name="search_history">search history</string>
+	<!-- TODO: Remove or change this placeholder text -->
+	<string name="hello_blank_fragment">Hello blank fragment</string>
+	<string name="hint_translate">Текст для перевода</string>
+	<string name="hint_translate_to">Перевод</string>
+</resources>
