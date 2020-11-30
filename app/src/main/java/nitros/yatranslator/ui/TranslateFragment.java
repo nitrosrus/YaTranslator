@@ -37,12 +37,11 @@ public class TranslateFragment extends MvpAppCompatFragment implements Translate
     private View rootView;
     private ImageButton btnTranslate;
     private ImageButton btnClear;
-    private Spinner spinnerFrom;
+
     private Spinner spinnerTo;
     private TextInputEditText inputText;
     private TextInputEditText outputText;
     private Language langBase;
-    ArrayAdapter<String> adapterFrom;
     ArrayAdapter<String> adapterTo;
     List<String> data = new ArrayList<>();
 
@@ -64,7 +63,6 @@ public class TranslateFragment extends MvpAppCompatFragment implements Translate
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_translate, container, false);
-        adapterFrom = new ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, data);
         adapterTo = new ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, data);
         return rootView;
     }
@@ -90,8 +88,7 @@ public class TranslateFragment extends MvpAppCompatFragment implements Translate
         btnTranslate.setOnClickListener(v -> btnTranslateClick());
         btnClear = rootView.findViewById(R.id.ib_clear);
         btnClear.setOnClickListener(v -> clearText());
-        spinnerFrom = rootView.findViewById(R.id.spinner_from);
-        spinnerFrom.setAdapter(adapterFrom);
+
         spinnerTo = rootView.findViewById(R.id.spinner_to);
         spinnerTo.setAdapter(adapterTo);
         inputText = rootView.findViewById(R.id.et_input);
@@ -140,7 +137,6 @@ public class TranslateFragment extends MvpAppCompatFragment implements Translate
     public void updateTranslateSelector() {
         data.clear();
         data.addAll(presenter.getLangList());
-        adapterFrom.notifyDataSetChanged();
         adapterTo.notifyDataSetChanged();
 
     }
