@@ -102,9 +102,6 @@ public class TranslateFragment extends MvpAppCompatFragment implements Translate
     public void clearText() {
         inputText.setText("");
         outputText.setText("");
-        for (LanguageDes lang : langBase.getLanguages()) {
-            if (lang.getName() != null) data.add(lang.getName());
-        }
 
     }
 
@@ -115,9 +112,10 @@ public class TranslateFragment extends MvpAppCompatFragment implements Translate
     }
 
     @Override
-    public void setTranslateText(String input, String output) {
+    public void setTranslateText(String input) {
+
         outputText.setText(input);
-        inputText.setText(output);
+
 
     }
 

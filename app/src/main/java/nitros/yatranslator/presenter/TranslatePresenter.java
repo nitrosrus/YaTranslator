@@ -20,6 +20,8 @@ import nitros.yatranslator.App;
 import nitros.yatranslator.entity.Language;
 import nitros.yatranslator.entity.LanguageDes;
 import nitros.yatranslator.entity.RequestLang;
+import nitros.yatranslator.entity.Translate;
+import nitros.yatranslator.entity.Translation;
 import nitros.yatranslator.model.api.IDataYandex;
 import nitros.yatranslator.view.TranslateView;
 
@@ -114,7 +116,6 @@ public class TranslatePresenter extends MvpPresenter<TranslateView> {
                     .subscribe(new DisposableSingleObserver<RequestLang>() {
                         @Override
                         public void onSuccess(@NonNull RequestLang requestLang) {
-
                             translate(to, text, requestLang.getLanguageCode());
                         }
 
@@ -133,17 +134,28 @@ public class TranslatePresenter extends MvpPresenter<TranslateView> {
         translator.translate(bodyCreator("translate", text, from, getLangTo(to)))
                 .subscribeOn(Schedulers.io())
                 .observeOn(mainThread)
-                .subscribe(new DisposableSingleObserver<RequestLang>() {
+                .subscribe(new DisposableSingleObserver<Translate>() {
                     @Override
-                    public void onSuccess(@NonNull RequestLang requestLang) {
-                        translate(to, text, requestLang.getLanguageCode());
+                    public void onSuccess(@NonNull Translate translation) {
+                        setTranslate(translation.getTranslations());
+
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
 
+
                     }
                 });
+    }
+
+    private void setTranslate(List<Translation> translation) {
+        StringBuffer sb = new StringBuffer();
+        for (Translation trans : translation) {
+            sb.append(trans.getText());
+        }
+        getViewState().setTranslateText(sb.toString());
+
     }
 
     private String getLangTo(String to) {
