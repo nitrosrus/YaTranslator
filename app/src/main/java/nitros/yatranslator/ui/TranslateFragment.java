@@ -37,7 +37,6 @@ public class TranslateFragment extends MvpAppCompatFragment implements Translate
     private View rootView;
     private ImageButton btnTranslate;
     private ImageButton btnClear;
-
     private Spinner spinnerTo;
     private TextInputEditText inputText;
     private TextInputEditText outputText;
@@ -83,21 +82,19 @@ public class TranslateFragment extends MvpAppCompatFragment implements Translate
 
     @Override
     public void init() {
-
         btnTranslate = rootView.findViewById(R.id.ib_translate);
         btnTranslate.setOnClickListener(v -> btnTranslateClick());
         btnClear = rootView.findViewById(R.id.ib_clear);
         btnClear.setOnClickListener(v -> clearText());
-
         spinnerTo = rootView.findViewById(R.id.spinner_to);
         spinnerTo.setAdapter(adapterTo);
         inputText = rootView.findViewById(R.id.et_input);
         outputText = rootView.findViewById(R.id.et_output);
 
-
         presenter.languageList.observe(this, test -> {
             updateTranslateSelector();
         });
+
         presenter.loadLang();
     }
 
@@ -108,7 +105,6 @@ public class TranslateFragment extends MvpAppCompatFragment implements Translate
         for (LanguageDes lang : langBase.getLanguages()) {
             if (lang.getName() != null) data.add(lang.getName());
         }
-        System.out.println(langBase.getLanguages().size());
 
     }
 
@@ -136,7 +132,7 @@ public class TranslateFragment extends MvpAppCompatFragment implements Translate
 
     public void updateTranslateSelector() {
         data.clear();
-        data.addAll(presenter.getLangList());
+        data.addAll(presenter.getLangList().keySet());
         adapterTo.notifyDataSetChanged();
 
     }
