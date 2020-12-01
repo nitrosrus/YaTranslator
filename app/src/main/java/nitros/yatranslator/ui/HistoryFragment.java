@@ -50,4 +50,14 @@ public class HistoryFragment extends MvpAppCompatFragment implements HistoryView
     HistoryPresenter provide() {
         return new HistoryPresenter();
     }
+
+    @Override
+    public void init() {
+
+    }
+
+    @Override
+    public void update() {
+
+    }
 }

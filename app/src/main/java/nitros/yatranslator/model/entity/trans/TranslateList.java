@@ -1,11 +1,11 @@
-package nitros.yatranslator.entity;
+package nitros.yatranslator.model.entity.trans;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class Translate {
+public class TranslateList {
     @SerializedName("translations")
     @Expose
     private List<Translation> translations = null;

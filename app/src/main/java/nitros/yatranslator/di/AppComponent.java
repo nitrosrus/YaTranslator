@@ -12,8 +12,11 @@ import nitros.yatranslator.presenter.TranslatePresenter;
 
 @Singleton
 @Component(modules = {
+        AppModule.class,
         ApiModule.class,
-        CiceroneModule.class
+        CiceroneModule.class,
+        DatabaseModule.class
+
 })
 
 public interface AppComponent {

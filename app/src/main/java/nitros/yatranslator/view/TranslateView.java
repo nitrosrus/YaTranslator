@@ -7,12 +7,7 @@ import moxy.viewstate.strategy.StateStrategyType;
 @StateStrategyType(AddToEndSingleStrategy.class)
 public interface TranslateView extends MvpView {
     void init();
-
     void clearText();
-
     void getText();
-
-
-
     void setTranslateText(String input);
 }

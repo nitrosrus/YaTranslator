@@ -24,8 +24,7 @@ import moxy.presenter.InjectPresenter;
 import moxy.presenter.ProvidePresenter;
 import nitros.yatranslator.App;
 import nitros.yatranslator.R;
-import nitros.yatranslator.entity.Language;
-import nitros.yatranslator.entity.LanguageDes;
+import nitros.yatranslator.model.entity.lang.Language;
 import nitros.yatranslator.model.api.IDataYandex;
 import nitros.yatranslator.presenter.TranslatePresenter;
 import nitros.yatranslator.view.TranslateView;
@@ -113,10 +112,8 @@ public class TranslateFragment extends MvpAppCompatFragment implements Translate
 
     @Override
     public void setTranslateText(String input) {
-
         outputText.setText(input);
-
-
+        presenter.putTranslationDatabase(inputText.getText().toString(), input);
     }
 
 

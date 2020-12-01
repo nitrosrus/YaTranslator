@@ -1,4 +1,4 @@
-package nitros.yatranslator.entity;
+package nitros.yatranslator.model.entity.trans;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

@@ -6,4 +6,6 @@ import moxy.viewstate.strategy.StateStrategyType;
 
 @StateStrategyType(AddToEndSingleStrategy.class)
 public interface HistoryView extends MvpView {
+     void init();
+     void update();
 }
