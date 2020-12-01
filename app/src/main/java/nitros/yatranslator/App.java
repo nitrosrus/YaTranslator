@@ -12,9 +12,6 @@ public class App extends Application {
 
     private static App instance = null;
 
-//    public static App getInstance() {
-//        return instance = instance == null ? new App() : instance;
-//    }
 
     private static AppComponent component;
 
@@ -24,7 +21,6 @@ public class App extends Application {
         super.onCreate();
         instance = this;
         component = DaggerAppComponent.builder().appModule(new AppModule(this)).build();
-        //component = DaggerAppComponent.builder().build();
     }
 
     public static AppComponent getComponent() {
