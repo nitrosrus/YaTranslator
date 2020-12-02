@@ -15,10 +15,4 @@ public class MainPresenter extends MvpPresenter<MainView> {
         App.getComponent().inject(this);
     }
 
-    public  void goToHistory() {
-
-    }
-
-    public  void goToTranslate() {
-    }
 }

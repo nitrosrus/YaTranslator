@@ -3,14 +3,18 @@ package nitros.yatranslator.model.api;
 import java.util.Map;
 
 import io.reactivex.rxjava3.core.Single;
-import nitros.yatranslator.entity.Language;
-import nitros.yatranslator.entity.RequestLang;
+import nitros.yatranslator.model.entity.RequestLang;
+import nitros.yatranslator.model.entity.lang.Language;
+import nitros.yatranslator.model.entity.trans.TranslateList;
 import retrofit2.http.Body;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 
 
 public interface IDataYandex {
+//Надо поменять <TOKEN> на настаящий токен
+
+    String HEADERS = "Authorization: Bearer <TOKEN>";
 
     // /translate/v2/languages список языков
     // /translate/v2/translate перевод на указаный язык
@@ -26,5 +30,5 @@ public interface IDataYandex {
 
     @POST("/translate/v2/translate")
     @Headers(HEADERS)
-    Single<Language> translate(@Body Map<String, String> text);
+    Single<TranslateList> translate(@Body Map<String, String> text);
 }

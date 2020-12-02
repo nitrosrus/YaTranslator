@@ -7,13 +7,17 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import moxy.MvpAppCompatFragment;
 import moxy.presenter.InjectPresenter;
 import moxy.presenter.ProvidePresenter;
 import nitros.yatranslator.App;
 import nitros.yatranslator.R;
 import nitros.yatranslator.presenter.HistoryPresenter;
+import nitros.yatranslator.ui.adapter.HistoryRVAdapter;
 import nitros.yatranslator.view.HistoryView;
 
 
@@ -27,6 +31,9 @@ public class HistoryFragment extends MvpAppCompatFragment implements HistoryView
 
     @InjectPresenter
     HistoryPresenter presenter;
+
+    RecyclerView recyclerView;
+    HistoryRVAdapter adapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,20 +51,34 @@ public class HistoryFragment extends MvpAppCompatFragment implements HistoryView
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         App.getComponent().inject(this);
+        recyclerView = view.findViewById(R.id.rv_history_list);
+
+
+
     }
 
     @ProvidePresenter
     HistoryPresenter provide() {
-        return new HistoryPresenter();
+        return new HistoryPresenter(AndroidSchedulers.mainThread());
     }
 
     @Override
     public void init() {
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        adapter = new HistoryRVAdapter(presenter.listPresenter);
+        recyclerView.setAdapter(adapter);
+    }
 
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        presenter.loadData();
     }
 
     @Override
     public void update() {
-
+        adapter.notifyDataSetChanged();
     }
 }

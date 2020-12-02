@@ -13,9 +13,7 @@ import java.util.TreeMap;
 import javax.inject.Inject;
 
 import io.reactivex.rxjava3.annotations.NonNull;
-import io.reactivex.rxjava3.core.CompletableObserver;
 import io.reactivex.rxjava3.core.Scheduler;
-import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.observers.DisposableSingleObserver;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import moxy.InjectViewState;
@@ -81,8 +79,6 @@ public class TranslatePresenter extends MvpPresenter<TranslateView> {
                 break;
 
         }
-
-
         return testMap;
     }
 
@@ -95,13 +91,10 @@ public class TranslatePresenter extends MvpPresenter<TranslateView> {
                     public void onSuccess(@NotNull Language language) {
                         languageList.postValue(language.getLanguages());
                     }
-
                     @Override
                     public void onError(Throwable e) {
-
                     }
                 });
-
     }
 
     public TreeMap<String, String> getLangList() {
@@ -174,7 +167,7 @@ public class TranslatePresenter extends MvpPresenter<TranslateView> {
         CachedTranslate item = new CachedTranslate();
         item.text = text;
         item.translation = translation;
-        database.putNewTranslate(item);
+        database.putNewTranslate(item).subscribeOn(Schedulers.io()).observeOn(mainThread).subscribe();
     }
 
 }

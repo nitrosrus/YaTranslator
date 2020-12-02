@@ -94,6 +94,7 @@ public class TranslateFragment extends MvpAppCompatFragment implements Translate
             updateTranslateSelector();
         });
 
+
         presenter.loadLang();
     }
 

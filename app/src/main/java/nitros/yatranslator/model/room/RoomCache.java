@@ -2,10 +2,9 @@ package nitros.yatranslator.model.room;
 
 import java.util.List;
 
+import io.reactivex.Single;
 import io.reactivex.rxjava3.core.Completable;
-import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
-import nitros.yatranslator.model.entity.trans.TranslationCachedText;
 import nitros.yatranslator.model.room.data.CachedTranslate;
 import nitros.yatranslator.model.room.data.Database;
 
@@ -17,18 +16,9 @@ public class RoomCache implements IRoomCache {
     }
 
     @Override
-    public Single<List<TranslationCachedText>> getAllTranslate() {
-        return Single.fromCallable(() -> {
-            List<TranslationCachedText> translate = null;
-            List<CachedTranslate> list = database.dao().getAll();
-            translate.clear();
-            for (CachedTranslate item : list) {
+    public Single<List<CachedTranslate>> getAllTranslate() {
+        return  database.dao().getAll();
 
-                translate.add(new TranslationCachedText( item.text, item.translation));
-            }
-
-            return translate;
-        }).subscribeOn(Schedulers.io());
 
 
     }
@@ -42,9 +32,5 @@ public class RoomCache implements IRoomCache {
 
     }
 
-    @Override
-    public void deleteTranslate(CachedTranslate cachedTranslate) {
 
-        database.dao().delete(cachedTranslate);
-    }
 }
