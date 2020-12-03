@@ -19,6 +19,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 import moxy.InjectViewState;
 import moxy.MvpPresenter;
 import nitros.yatranslator.App;
+import nitros.yatranslator.YandexConstants;
 import nitros.yatranslator.model.api.IDataYandex;
 import nitros.yatranslator.model.entity.RequestLang;
 import nitros.yatranslator.model.entity.lang.Language;
@@ -43,7 +44,7 @@ public class TranslatePresenter extends MvpPresenter<TranslateView> {
     public MutableLiveData<List<LanguageDes>> languageList = new MutableLiveData<>();
 
     TreeMap<String, String> mapLanguage = new TreeMap<>();
-
+public String folberId= YandexConstants.FOLBER_ID_YANDEX;
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
@@ -68,14 +69,14 @@ public class TranslatePresenter extends MvpPresenter<TranslateView> {
                 testMap.put("targetLanguageCode", to);
                 //testMap.put("format", text);
                 testMap.put("texts", text);
-                testMap.put("folderId", "b1gf1b6jrptsu34pb50m");
+                testMap.put("folderId", folberId);
                 break;
             case "detectLanguage":
                 testMap.put("text", text);
-                testMap.put("folderId", "b1gf1b6jrptsu34pb50m");
+                testMap.put("folderId", folberId);
                 break;
             case "listLanguages":
-                testMap.put("folderId", "b1gf1b6jrptsu34pb50m");
+                testMap.put("folderId", folberId);
                 break;
 
         }
@@ -91,6 +92,7 @@ public class TranslatePresenter extends MvpPresenter<TranslateView> {
                     public void onSuccess(@NotNull Language language) {
                         languageList.postValue(language.getLanguages());
                     }
+
                     @Override
                     public void onError(Throwable e) {
                     }
