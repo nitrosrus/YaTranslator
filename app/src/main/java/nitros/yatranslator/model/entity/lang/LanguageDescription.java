@@ -3,7 +3,8 @@ package nitros.yatranslator.model.entity.lang;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class LanguageDes {
+public class LanguageDescription {
+
     @SerializedName("code")
     @Expose
     private String code;

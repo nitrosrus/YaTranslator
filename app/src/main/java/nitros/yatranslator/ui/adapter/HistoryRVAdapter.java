@@ -14,12 +14,13 @@ import nitros.yatranslator.view.TranslateItemView;
 
 public class HistoryRVAdapter extends RecyclerView.Adapter<HistoryRVAdapter.ViewHolder> {
     HistoryPresenter.HistoryListPresenter presenter;
+    OnItemClickListener listener;
 
     public HistoryRVAdapter(HistoryPresenter.HistoryListPresenter presenter) {
         this.presenter = presenter;
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder implements TranslateItemView {
+    class ViewHolder extends RecyclerView.ViewHolder implements TranslateItemView, View.OnClickListener {
         Integer pos = -1;
         private TextView textFrom;
         private TextView textTo;
@@ -28,6 +29,7 @@ public class HistoryRVAdapter extends RecyclerView.Adapter<HistoryRVAdapter.View
             super(itemView);
             textFrom = itemView.findViewById(R.id.tv_translate_from);
             textTo = itemView.findViewById(R.id.tv_translate_to);
+
 
         }
 
@@ -40,6 +42,13 @@ public class HistoryRVAdapter extends RecyclerView.Adapter<HistoryRVAdapter.View
         public void setText(String text, String translate) {
             textFrom.setText(text);
             textTo.setText(translate);
+        }
+
+        @Override
+        public void onClick(View view) {
+            if (listener != null) {
+                listener.onItemClick(view, getPos());
+            }
         }
 
     }
@@ -57,6 +66,12 @@ public class HistoryRVAdapter extends RecyclerView.Adapter<HistoryRVAdapter.View
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.pos = position;
         presenter.bindView(holder);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     @Override
@@ -64,5 +79,13 @@ public class HistoryRVAdapter extends RecyclerView.Adapter<HistoryRVAdapter.View
         return presenter.getCount();
     }
 
+
+    public interface OnItemClickListener {
+        public void onItemClick(View view, int pos);
+    }
+
+    public void SetOnItemClickListener(final OnItemClickListener listener) {
+        this.listener = listener;
+    }
 
 }

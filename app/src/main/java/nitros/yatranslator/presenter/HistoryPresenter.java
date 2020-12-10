@@ -5,8 +5,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.CompletableObserver;
 import io.reactivex.Scheduler;
 import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import moxy.InjectViewState;
@@ -18,12 +20,13 @@ import nitros.yatranslator.model.room.data.CachedTranslate;
 import nitros.yatranslator.view.HistoryView;
 import nitros.yatranslator.view.IHistoryListPresenter;
 import nitros.yatranslator.view.TranslateItemView;
+import timber.log.Timber;
 
 @InjectViewState
 public class HistoryPresenter extends MvpPresenter<HistoryView> {
 
 
-    public List<TranslationCachedText> translateList=new ArrayList<>();
+    public List<TranslationCachedText> translateList = new ArrayList<>();
 
     Scheduler mainThread;
 
@@ -32,10 +35,11 @@ public class HistoryPresenter extends MvpPresenter<HistoryView> {
     }
 
     public static class HistoryListPresenter implements IHistoryListPresenter {
-        public List<TranslationCachedText> list=new ArrayList<>();
+        public List<TranslationCachedText> list = new ArrayList<>();
 
         @Override
         public int getCount() {
+
             if (list != null) {
                 return list.size();
 
@@ -49,6 +53,12 @@ public class HistoryPresenter extends MvpPresenter<HistoryView> {
                     list.get(view.getPos()).getText(),
                     list.get(view.getPos()).getTranslation()
             );
+        }
+
+        @Override
+        public TranslationCachedText getItem(TranslateItemView view) {
+            return   list.get(view.getPos());
+
         }
 
 
@@ -73,25 +83,48 @@ public class HistoryPresenter extends MvpPresenter<HistoryView> {
             @Override
             public void onSuccess(@NonNull List<CachedTranslate> cachedTranslates) {
                 translateList.clear();
+
                 for (CachedTranslate item : cachedTranslates) {
-                    translateList.add(new TranslationCachedText(item.text, item.translation));
+                    translateList.add(new TranslationCachedText(item.id, item.text, item.translation));
                 }
                 setData();
             }
 
             @Override
             public void onError(@NonNull Throwable e) {
-
+                Timber.e(e);
             }
         });
-
-    };
+    }
 
 
     public void setData() {
         listPresenter.list.clear();
         listPresenter.list.addAll(translateList);
+        updateData();
+    }
+
+    void updateData() {
         getViewState().update();
+    }
+
+    public void deleteItemById(int id) {
+        dataBase.deleteById(id).subscribeOn(Schedulers.io()).observeOn(mainThread).subscribe(new CompletableObserver() {
+            @Override
+            public void onSubscribe(@NonNull Disposable d) {
+            }
+
+            @Override
+            public void onComplete() {
+                updateData();
+            }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+                Timber.e(e);
+                ;
+            }
+        });
     }
 
 

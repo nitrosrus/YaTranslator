@@ -5,22 +5,21 @@ import com.google.gson.annotations.SerializedName;
 
 public class TranslationCachedText {
 
-    public TranslationCachedText( String text, String translation) {
-
+    public TranslationCachedText(Integer id, String text, String translation) {
+        this.id = id;
         this.text = text;
         this.translation = translation;
     }
 
     @SerializedName("id")
     @Expose
-    private String id;
+    private Integer id;
 
-
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

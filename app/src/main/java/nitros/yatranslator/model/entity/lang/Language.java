@@ -9,13 +9,13 @@ public class Language {
 
     @SerializedName("languages")
     @Expose
-    private List<LanguageDes> languages = null;
+    private List<LanguageDescription> languages = null;
 
-    public List<LanguageDes> getLanguages() {
+    public List<LanguageDescription> getLanguages() {
         return languages;
     }
 
-    public void setLanguages(List<LanguageDes> languages) {
+    public void setLanguages(List<LanguageDescription> languages) {
         this.languages = languages;
     }
 }

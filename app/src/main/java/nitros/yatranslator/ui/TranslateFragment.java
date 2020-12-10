@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,7 +19,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import moxy.MvpAppCompatFragment;
 import moxy.presenter.InjectPresenter;
 import moxy.presenter.ProvidePresenter;
@@ -32,6 +33,10 @@ import nitros.yatranslator.view.TranslateView;
 
 public class TranslateFragment extends MvpAppCompatFragment implements TranslateView {
 
+    public static TranslateFragment getInstance() {
+        return instance = instance == null ? new TranslateFragment() : instance;
+    }
+
     private static TranslateFragment instance = null;
     private View rootView;
     private ImageButton btnTranslate;
@@ -39,15 +44,8 @@ public class TranslateFragment extends MvpAppCompatFragment implements Translate
     private Spinner spinnerTo;
     private TextInputEditText inputText;
     private TextInputEditText outputText;
-    private Language langBase;
-    ArrayAdapter<String> adapterTo;
-    List<String> data = new ArrayList<>();
-
-
-    public static TranslateFragment getInstance() {
-        return instance = instance == null ? new TranslateFragment() : instance;
-    }
-
+    private ArrayAdapter<String> adapterTo;
+    private List<String> data = new ArrayList<>();
     @InjectPresenter
     TranslatePresenter presenter;
 
@@ -76,60 +74,56 @@ public class TranslateFragment extends MvpAppCompatFragment implements Translate
         return new TranslatePresenter(AndroidSchedulers.mainThread());
     }
 
-    @Inject
-    IDataYandex translator;
 
     @Override
     public void init() {
         btnTranslate = rootView.findViewById(R.id.ib_translate);
-        btnTranslate.setOnClickListener(v -> btnTranslateClick());
+        btnTranslate.setOnClickListener(v -> presenter.btnTranslateClick());
         btnClear = rootView.findViewById(R.id.ib_clear);
         btnClear.setOnClickListener(v -> clearText());
         spinnerTo = rootView.findViewById(R.id.spinner_to);
         spinnerTo.setAdapter(adapterTo);
         inputText = rootView.findViewById(R.id.et_input);
         outputText = rootView.findViewById(R.id.et_output);
+    }
 
-        presenter.languageList.observe(this, test -> {
-            updateTranslateSelector();
-        });
+    @Override
+    public void onResume() {
+        super.onResume();
+        clearText();
+    }
 
-
-        presenter.loadLang();
+    @Override
+    public void initializeData() {
+        presenter.refreshData(spinnerTo.getSelectedItem().toString(), inputText.getText().toString());
     }
 
     @Override
     public void clearText() {
         inputText.setText("");
         outputText.setText("");
-
     }
 
     @Override
-    public void getText() {
-
-
+    public void setTranslateText(String translation) {
+        presenter.putTranslationDatabase();
+        outputText.setText(translation);
     }
 
     @Override
-    public void setTranslateText(String input) {
-        outputText.setText(input);
-        presenter.putTranslationDatabase(inputText.getText().toString(), input);
-    }
-
-
-    private void btnTranslateClick() {
-        presenter.initAndTranslate(
-                spinnerTo.getSelectedItem().toString(),
-                inputText.getText().toString()
-        );
-
-    }
-
-    public void updateTranslateSelector() {
+    public void setNewDataSpinner(List directionOnTranslation) {
         data.clear();
-        data.addAll(presenter.getLangList().keySet());
+        data.addAll(directionOnTranslation);
+    }
+
+    @Override
+    public void updateAdapter() {
         adapterTo.notifyDataSetChanged();
+    }
+
+    @Override
+    public void errorMassage(String text) {
+        Toast.makeText(requireContext(), text, Toast.LENGTH_LONG).show();
 
     }
 }
