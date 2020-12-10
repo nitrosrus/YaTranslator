@@ -43,7 +43,7 @@ public class TranslatePresenter extends MvpPresenter<TranslateView> {
 
     private Scheduler mainThread;
     private TreeMap<String, String> mapLanguage = new TreeMap<>();
-    private String folderId = YandexConstants.FOLBER_ID_YANDEX;
+    private String folderId = YandexConstants.FOLDER_ID_YANDEX;
     private String fromLanguage = "";
     private String toLanguage = "";
     private String inputText = "";

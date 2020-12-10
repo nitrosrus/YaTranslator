@@ -17,16 +17,12 @@ import com.google.android.material.textfield.TextInputEditText;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import moxy.MvpAppCompatFragment;
 import moxy.presenter.InjectPresenter;
 import moxy.presenter.ProvidePresenter;
 import nitros.yatranslator.App;
 import nitros.yatranslator.R;
-import nitros.yatranslator.model.entity.lang.Language;
-import nitros.yatranslator.model.api.IDataYandex;
 import nitros.yatranslator.presenter.TranslatePresenter;
 import nitros.yatranslator.view.TranslateView;
 
