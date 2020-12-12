@@ -22,8 +22,13 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
 
     @InjectPresenter
     MainPresenter mainPresenter;
+    @Inject
+    NavigatorHolder navigatorHolder;
+
     BottomNavigationView bottomNavigation;
     SupportAppNavigator navigator = new SupportAppNavigator(this, R.id.container);
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,24 +36,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
         App.getComponent().inject(this);
         setContentView(R.layout.activity_main);
         bottomNavigation = findViewById(R.id.bottom_navigation);
-        bottomNavigation.setOnNavigationItemSelectedListener(item -> {
-            switch (item.getItemId()) {
-                case R.id.translate_item:
-                    router.navigateTo(new AppScreens.TranslateScreen());
-                    return true;
-                case R.id.history_item:
-                    router.navigateTo(new AppScreens.HistoryScreen());
-                    return true;
-            }
-            return true;
-        });
-
     }
-
-    @Inject
-    NavigatorHolder navigatorHolder;
-    @Inject
-    Router router;
 
 
     @ProvidePresenter
@@ -60,13 +48,32 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
     protected void onResumeFragments() {
         super.onResumeFragments();
         navigatorHolder.setNavigator(navigator);
-           router.navigateTo(new AppScreens.TranslateScreen());
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mainPresenter.navigateTranslateScreen();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         navigatorHolder.removeNavigator();
+    }
+
+    @Override
+    public void init() {
+        bottomNavigation.setOnNavigationItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.translate_item:
+                    mainPresenter.navigateTranslateScreen();
+                    return true;
+                case R.id.history_item:
+                    mainPresenter.navigateHistoryScreen();
+                    return true;
+            }
+            return true;
+        });
     }
 }

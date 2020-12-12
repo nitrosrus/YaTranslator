@@ -37,12 +37,11 @@ public class HistoryPresenter extends MvpPresenter<HistoryView> {
 
 
     public static class HistoryListPresenter implements IHistoryListPresenter {
-        private List<TranslationCachedText> list = new ArrayList<>();
 
         public HistoryListPresenter(HistoryPresenter historyPresenter) {
             this.historyPresenter = historyPresenter;
         }
-
+        private List<TranslationCachedText> list = new ArrayList<>();
         HistoryPresenter historyPresenter;
 
         @Override
@@ -50,7 +49,6 @@ public class HistoryPresenter extends MvpPresenter<HistoryView> {
 
             if (list != null) {
                 return list.size();
-
             }
             return 0;
         }
@@ -61,12 +59,6 @@ public class HistoryPresenter extends MvpPresenter<HistoryView> {
                     list.get(view.getPos()).getText(),
                     list.get(view.getPos()).getTranslation()
             );
-        }
-
-        @Override
-        public TranslationCachedText getItem(TranslateItemView view) {
-            return list.get(view.getPos());
-
         }
 
         @Override

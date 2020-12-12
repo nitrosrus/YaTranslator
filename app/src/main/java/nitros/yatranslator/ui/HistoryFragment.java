@@ -28,7 +28,9 @@ public class HistoryFragment extends MvpAppCompatFragment implements HistoryView
     private static HistoryFragment instance = null;
 
     public static HistoryFragment getInstance() {
+
         return instance = instance == null ? new HistoryFragment() : instance;
+
     }
 
     @InjectPresenter
@@ -55,8 +57,6 @@ public class HistoryFragment extends MvpAppCompatFragment implements HistoryView
         super.onViewCreated(view, savedInstanceState);
         App.getComponent().inject(this);
         recyclerView = view.findViewById(R.id.rv_history_list);
-
-
     }
 
     @ProvidePresenter
@@ -72,7 +72,6 @@ public class HistoryFragment extends MvpAppCompatFragment implements HistoryView
         callback = new SimpleItemTouchHelperCallback(adapter);
         touchHelper = new ItemTouchHelper(callback);
         touchHelper.attachToRecyclerView(recyclerView);
-
     }
 
 

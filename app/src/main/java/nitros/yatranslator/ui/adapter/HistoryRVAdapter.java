@@ -21,11 +21,10 @@ public class HistoryRVAdapter extends RecyclerView.Adapter<HistoryRVAdapter.View
     }
 
     @Override
-    public boolean onItemMove(int fromPosition, int toPosition) {
+    public void onItemMove(int fromPosition, int toPosition) {
         if (presenter.onItemMove(fromPosition, toPosition)) {
             notifyItemMoved(fromPosition, toPosition);
         }
-        return true;
     }
 
     @Override
@@ -48,12 +47,6 @@ public class HistoryRVAdapter extends RecyclerView.Adapter<HistoryRVAdapter.View
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.pos = position;
         presenter.bindView(holder);
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
     }
 
     @Override
@@ -90,7 +83,7 @@ public class HistoryRVAdapter extends RecyclerView.Adapter<HistoryRVAdapter.View
 
 interface ItemTouchHelperAdapter {
 
-    boolean onItemMove(int fromPosition, int toPosition);
+    void onItemMove(int fromPosition, int toPosition);
 
     void onItemDismiss(int position);
 }

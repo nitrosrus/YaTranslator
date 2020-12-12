@@ -32,7 +32,6 @@ public class ApiModule {
                 .baseUrl(baseUrl)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
-                .addConverterFactory(ScalarsConverterFactory.create())
                 .build()
                 .create(IDataYandex.class);
         return retrofit;
@@ -41,7 +40,6 @@ public class ApiModule {
     @Provides
     Gson gson() {
         return new GsonBuilder()
-                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .excludeFieldsWithoutExposeAnnotation()
                 .create();
     }
