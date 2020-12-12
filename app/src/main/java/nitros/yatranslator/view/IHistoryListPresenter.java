@@ -9,4 +9,8 @@ public interface IHistoryListPresenter {
     void bindView(TranslateItemView view);
 
     TranslationCachedText getItem(TranslateItemView view);
+
+    boolean onItemMove(int fromPosition, int toPosition);
+
+    void onItemDismiss(int position);
 }

@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,6 +19,7 @@ import nitros.yatranslator.App;
 import nitros.yatranslator.R;
 import nitros.yatranslator.presenter.HistoryPresenter;
 import nitros.yatranslator.ui.adapter.HistoryRVAdapter;
+import nitros.yatranslator.ui.adapter.SimpleItemTouchHelperCallback;
 import nitros.yatranslator.view.HistoryView;
 
 
@@ -31,9 +33,10 @@ public class HistoryFragment extends MvpAppCompatFragment implements HistoryView
 
     @InjectPresenter
     HistoryPresenter presenter;
-
     RecyclerView recyclerView;
     HistoryRVAdapter adapter;
+    ItemTouchHelper.Callback callback;
+    ItemTouchHelper touchHelper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,7 +57,6 @@ public class HistoryFragment extends MvpAppCompatFragment implements HistoryView
         recyclerView = view.findViewById(R.id.rv_history_list);
 
 
-
     }
 
     @ProvidePresenter
@@ -67,14 +69,17 @@ public class HistoryFragment extends MvpAppCompatFragment implements HistoryView
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         adapter = new HistoryRVAdapter(presenter.listPresenter);
         recyclerView.setAdapter(adapter);
-    }
+        callback = new SimpleItemTouchHelperCallback(adapter);
+        touchHelper = new ItemTouchHelper(callback);
+        touchHelper.attachToRecyclerView(recyclerView);
 
+    }
 
 
     @Override
     public void onResume() {
         super.onResume();
-        presenter.loadData();
+        presenter.loadAllDataBaseTranslationText();
     }
 
     @Override

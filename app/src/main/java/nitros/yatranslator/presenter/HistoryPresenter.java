@@ -1,6 +1,7 @@
 package nitros.yatranslator.presenter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -24,18 +25,25 @@ import timber.log.Timber;
 
 @InjectViewState
 public class HistoryPresenter extends MvpPresenter<HistoryView> {
-
-
-    public List<TranslationCachedText> translateList = new ArrayList<>();
-
-    Scheduler mainThread;
-
     public HistoryPresenter(Scheduler mainThread) {
         this.mainThread = mainThread;
     }
 
+    private List<TranslationCachedText> translateList = new ArrayList<>();
+    private Scheduler mainThread;
+    @Inject
+    IRoomCache dataBase;
+    public HistoryListPresenter listPresenter = new HistoryListPresenter(this);
+
+
     public static class HistoryListPresenter implements IHistoryListPresenter {
-        public List<TranslationCachedText> list = new ArrayList<>();
+        private List<TranslationCachedText> list = new ArrayList<>();
+
+        public HistoryListPresenter(HistoryPresenter historyPresenter) {
+            this.historyPresenter = historyPresenter;
+        }
+
+        HistoryPresenter historyPresenter;
 
         @Override
         public int getCount() {
@@ -57,15 +65,33 @@ public class HistoryPresenter extends MvpPresenter<HistoryView> {
 
         @Override
         public TranslationCachedText getItem(TranslateItemView view) {
-            return   list.get(view.getPos());
+            return list.get(view.getPos());
 
+        }
+
+        @Override
+        public boolean onItemMove(int fromPosition, int toPosition) {
+            if (fromPosition < toPosition) {
+                for (int i = fromPosition; i < toPosition; i++) {
+                    Collections.swap(list, i, i + 1);
+                }
+            } else {
+                for (int i = fromPosition; i > toPosition; i--) {
+                    Collections.swap(list, i, i - 1);
+                }
+            }
+            return true;
+        }
+
+        @Override
+        public void onItemDismiss(int position) {
+            historyPresenter.deleteRoomItemById((list.get(position)).getId());
+            list.remove(position);
         }
 
 
     }
 
-
-    public HistoryListPresenter listPresenter = new HistoryListPresenter();
 
     @Override
     protected void onFirstViewAttach() {
@@ -74,20 +100,13 @@ public class HistoryPresenter extends MvpPresenter<HistoryView> {
         getViewState().init();
     }
 
-    @Inject
-    IRoomCache dataBase;
 
-    public void loadData() {
+    public void loadAllDataBaseTranslationText() {
 
         dataBase.getAllTranslate().subscribeOn(Schedulers.io()).observeOn(mainThread).subscribe(new DisposableSingleObserver<List<CachedTranslate>>() {
             @Override
             public void onSuccess(@NonNull List<CachedTranslate> cachedTranslates) {
-                translateList.clear();
-
-                for (CachedTranslate item : cachedTranslates) {
-                    translateList.add(new TranslationCachedText(item.id, item.text, item.translation));
-                }
-                setData();
+                converterDataBaseTranslationText(cachedTranslates);
             }
 
             @Override
@@ -97,18 +116,26 @@ public class HistoryPresenter extends MvpPresenter<HistoryView> {
         });
     }
 
+    private void converterDataBaseTranslationText(List<CachedTranslate> inputDataBase) {
+        translateList.clear();
+        for (CachedTranslate item : inputDataBase) {
+            translateList.add(new TranslationCachedText(item.id, item.text, item.translation));
+        }
+        setDataBase();
+    }
 
-    public void setData() {
+
+    private void setDataBase() {
         listPresenter.list.clear();
         listPresenter.list.addAll(translateList);
         updateData();
     }
 
-    void updateData() {
+    private void updateData() {
         getViewState().update();
     }
 
-    public void deleteItemById(int id) {
+    public void deleteRoomItemById(int id) {
         dataBase.deleteById(id).subscribeOn(Schedulers.io()).observeOn(mainThread).subscribe(new CompletableObserver() {
             @Override
             public void onSubscribe(@NonNull Disposable d) {
@@ -116,16 +143,12 @@ public class HistoryPresenter extends MvpPresenter<HistoryView> {
 
             @Override
             public void onComplete() {
-                updateData();
             }
 
             @Override
             public void onError(@NonNull Throwable e) {
                 Timber.e(e);
-                ;
             }
         });
     }
-
-
 }

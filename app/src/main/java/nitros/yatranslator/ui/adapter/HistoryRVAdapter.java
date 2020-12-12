@@ -12,46 +12,28 @@ import nitros.yatranslator.R;
 import nitros.yatranslator.presenter.HistoryPresenter;
 import nitros.yatranslator.view.TranslateItemView;
 
-public class HistoryRVAdapter extends RecyclerView.Adapter<HistoryRVAdapter.ViewHolder> {
+public class HistoryRVAdapter extends RecyclerView.Adapter<HistoryRVAdapter.ViewHolder> implements ItemTouchHelperAdapter {
     HistoryPresenter.HistoryListPresenter presenter;
-    OnItemClickListener listener;
+
 
     public HistoryRVAdapter(HistoryPresenter.HistoryListPresenter presenter) {
         this.presenter = presenter;
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder implements TranslateItemView, View.OnClickListener {
-        Integer pos = -1;
-        private TextView textFrom;
-        private TextView textTo;
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            textFrom = itemView.findViewById(R.id.tv_translate_from);
-            textTo = itemView.findViewById(R.id.tv_translate_to);
-
-
+    @Override
+    public boolean onItemMove(int fromPosition, int toPosition) {
+        if (presenter.onItemMove(fromPosition, toPosition)) {
+            notifyItemMoved(fromPosition, toPosition);
         }
-
-        @Override
-        public Integer getPos() {
-            return pos;
-        }
-
-        @Override
-        public void setText(String text, String translate) {
-            textFrom.setText(text);
-            textTo.setText(translate);
-        }
-
-        @Override
-        public void onClick(View view) {
-            if (listener != null) {
-                listener.onItemClick(view, getPos());
-            }
-        }
-
+        return true;
     }
+
+    @Override
+    public void onItemDismiss(int position) {
+        presenter.onItemDismiss(position);
+        notifyItemRemoved(position);
+    }
+
 
     @NonNull
     @Override
@@ -80,12 +62,35 @@ public class HistoryRVAdapter extends RecyclerView.Adapter<HistoryRVAdapter.View
     }
 
 
-    public interface OnItemClickListener {
-        public void onItemClick(View view, int pos);
+    class ViewHolder extends RecyclerView.ViewHolder implements TranslateItemView {
+        Integer pos = -1;
+        private TextView textFrom;
+        private TextView textTo;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            textFrom = itemView.findViewById(R.id.tv_translate_from);
+            textTo = itemView.findViewById(R.id.tv_translate_to);
+        }
+
+        @Override
+        public Integer getPos() {
+            return pos;
+        }
+
+        @Override
+        public void setText(String text, String translate) {
+            textFrom.setText(text);
+            textTo.setText(translate);
+        }
     }
 
-    public void SetOnItemClickListener(final OnItemClickListener listener) {
-        this.listener = listener;
-    }
 
+}
+
+interface ItemTouchHelperAdapter {
+
+    boolean onItemMove(int fromPosition, int toPosition);
+
+    void onItemDismiss(int position);
 }
